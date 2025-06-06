@@ -70,7 +70,7 @@ npx expo start
 
 ## 🎥 Demonstração em Vídeo
 
-> Em breve ...
+[video](./assets/video-demonstração.mp4)
 
 
 ## 📄 Licença

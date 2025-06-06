@@ -1,9 +1,6 @@
 import { Text, View } from "react-native";
+import WelcomeScreen from "./welcome";
 
 export default function Index() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Monitoramento de Riscos de Deslizamentos</Text>
-    </View>
-  );
+  return <WelcomeScreen />
 }

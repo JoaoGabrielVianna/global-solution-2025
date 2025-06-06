@@ -63,10 +63,9 @@ npx expo start
 
 | Nome 	                | RM    |
 |-----------------------|-------|
-|Rodrigo Panisi Pombo 	|550755 |
+|João Gabriel Vianna 	|551963 |
 |Guilherme Pinheiro 	|99839  |
 |Nilton P G V Miranda 	|97868  |
-|João Gabriel Vianna 	|551963 |
 
 
 ## 🎥 Demonstração em Vídeo

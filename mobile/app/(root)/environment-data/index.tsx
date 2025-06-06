@@ -13,6 +13,7 @@ import { COLORS } from '@/app/constants/colors';
 import { useApp } from '@/app/contexts/appContext';
 import { InputField } from '@/app/components/inputField';
 import MonitoringRecord from '@/app/models/monitoringRecord';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface EnvironmentData {
   soilHumidity: string;
@@ -74,34 +75,32 @@ export default function EnvironmentDataScreen() {
 
   const handleSaveData = async () => {
     if (!validateData()) return;
-
+  
     try {
       const timestamp = new Date();
       const isoString = timestamp.toISOString();
-
+  
       const date = timestamp.toLocaleDateString('pt-BR');
       const time = timestamp.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
+  
       const soilHumidity = parseFloat(data.soilHumidity);
       const terrainInclination = parseFloat(data.terrainInclination);
       const rainfall = parseFloat(data.rainfall);
       const temperature = parseFloat(data.temperature);
-
-      // Função simples de exemplo para cálculo de risco:
+  
       const weightedRisk = (
         (soilHumidity * 0.25) +
         (terrainInclination * 0.30) +
         (rainfall * 0.30) +
         (temperature * 0.15)
       );
-
+  
       let riskLevel: 'baixo' | 'moderado' | 'alto' | 'extremo';
-
       if (weightedRisk < 25) riskLevel = 'baixo';
       else if (weightedRisk < 50) riskLevel = 'moderado';
       else if (weightedRisk < 75) riskLevel = 'alto';
       else riskLevel = 'extremo';
-
+  
       const newReading: MonitoringRecord = {
         id: Date.now().toString(),
         timestamp: isoString,
@@ -117,11 +116,16 @@ export default function EnvironmentDataScreen() {
           temperature,
         },
       };
-
-      setMonitoringData(prev => [newReading, ...prev]);
-      console.log(newReading)
+  
+      // Atualiza estado
+      const updatedData = [newReading, ...monitoringData];
+      setMonitoringData(updatedData);
+  
+      // Persiste no AsyncStorage também
+      await AsyncStorage.setItem('@monitoring_data', JSON.stringify(updatedData));
+  
       Alert.alert('Sucesso', 'Dados ambientais salvos com sucesso!', [{ text: 'OK' }]);
-
+  
       setData({
         soilHumidity: '',
         terrainInclination: '',
@@ -130,9 +134,11 @@ export default function EnvironmentDataScreen() {
         location: '',
       });
     } catch (error) {
+      console.error(error);
       Alert.alert('Erro', 'Falha ao salvar os dados. Tente novamente.');
     }
   };
+  
 
 
   const citiesList = useMemo(() => {
